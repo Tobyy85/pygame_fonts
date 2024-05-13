@@ -41,11 +41,19 @@ while run:
                     
     screen.fill((15, 15, 15))
     
-    font = pg.font.SysFont(fonts[current_font_index], 150)
-    text = fonts[current_font_index]
+    font = pg.font.SysFont(fonts[current_font_index], 50)
+    text = f'{string.ascii_lowercase} {string.ascii_uppercase}'
     rendered_text = font.render(text, True, (240, 240, 240))
     rect = rendered_text.get_rect()
     rect.center = (w//2, h//2)
+    screen.blit(rendered_text, rect)
+    
+    bottom_pos = rect.bottom
+    
+    text = f'{string.digits} {string.punctuation}'
+    rendered_text = font.render(text, True, (240, 240, 240))
+    rect = rendered_text.get_rect()
+    rect.center = (w//2, bottom_pos + 10 + rect.height//2)
     screen.blit(rendered_text, rect)
     
     font = pg.font.SysFont('arial', 50)
