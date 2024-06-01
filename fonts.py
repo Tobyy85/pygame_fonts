@@ -12,9 +12,19 @@ pg.font.init()
 fonts = pg.font.get_fonts()
 saved_fonts = []
 
-font_scale = w / 2560
+scale = w / 2560
 
 current_font_index = 0
+
+star_image = pg.image.load('star.png')
+star_image = pg.transform.scale(star_image, (int(star_image.get_width()*scale), int(star_image.get_height()*scale)))
+star_image_rect = star_image.get_rect()
+star_image_rect.topright = (w-20, 20)
+
+star_filled_image = pg.image.load('star_filled.png')
+star_filled_image = pg.transform.scale(star_filled_image, (int(star_filled_image.get_width()*scale), int(star_filled_image.get_height()*scale)))
+star_filled_image_rect = star_filled_image.get_rect()
+star_filled_image_rect.topright = (w-20, 20)
 
 file_name = f'saved/{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.json'
 
@@ -36,14 +46,17 @@ while run:
                     current_font_index = 0
                     
             if event.key in [pg.K_SPACE, pg.K_RETURN]:
-                saved_fonts.append(fonts[current_font_index])
+                if fonts[current_font_index] in saved_fonts:
+                    saved_fonts.remove(fonts[current_font_index])
+                else:
+                    saved_fonts.append(fonts[current_font_index])
                 with open(file_name, 'w') as f:
                     json.dump(saved_fonts, f)
                     
                     
     screen.fill((15, 15, 15))
     
-    font = pg.font.SysFont(fonts[current_font_index], int(50*font_scale))
+    font = pg.font.SysFont(fonts[current_font_index], int(50*scale))
     text = f'{string.ascii_lowercase} {string.ascii_uppercase}'
     rendered_text = font.render(text, True, (240, 240, 240))
     rect = rendered_text.get_rect()
@@ -58,19 +71,24 @@ while run:
     rect.center = (w//2, bottom_pos + 10 + rect.height//2)
     screen.blit(rendered_text, rect)
     
-    font = pg.font.SysFont('arial', int(50*font_scale))
+    font = pg.font.SysFont('arial', int(50*scale))
     text = f'{current_font_index+1}/{len(fonts)}'
     rendered_text = font.render(text, True, (240, 240, 240))
     rect = rendered_text.get_rect()
     rect.topleft = (20, 20)
     screen.blit(rendered_text, rect)
     
-    font = pg.font.SysFont('arial', int(30*font_scale))
+    font = pg.font.SysFont('arial', int(30*scale))
     text = f'press space to save font'
     rendered_text = font.render(text, True, (240, 240, 240))
     rect = rendered_text.get_rect()
     rect.bottomright = (w-20, h-20)
     screen.blit(rendered_text, rect)
+    
+    if fonts[current_font_index] in saved_fonts:
+        screen.blit(star_filled_image, star_filled_image_rect)
+    else:
+        screen.blit(star_image, star_image_rect)
     
     
     
